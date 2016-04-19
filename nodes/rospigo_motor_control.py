@@ -7,9 +7,19 @@ from std_msgs.msg import Int32MultiArray
 # GoPiGo imports
 import gopigo
 
+import atexit
+
 # Topic names
 topic_motor1 = "/gopigo/motor1"
 topic_motor2 = "/gopigo/motor2"
+
+class Empty:
+    def __init__(self):
+        pass
+
+def stop_motors():
+    gopigo.motor1(0,0)
+    gopigo.motor2(0,0)
 
 # Callbacks
 def motor1_callback(data):
@@ -28,6 +38,7 @@ motor2_sub = rospy.Subscriber(topic_motor2, Int32MultiArray, motor2_callback)
 
 # Init and Run
 rospy.init_node('rospigo_motor_control', anonymous=True)
+atexit.register(stop_motors)
 rospy.spin()
 
 '''
